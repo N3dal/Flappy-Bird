@@ -7,7 +7,7 @@ from pygame import image
 
 
 # window defaults;
-WINDOW_SIZE = [350, 600]
+WINDOW_SIZE = [288, 512]
 BACKGROUND_COLOR = (0, 0, 0)
 
 
