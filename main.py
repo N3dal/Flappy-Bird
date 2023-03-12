@@ -13,7 +13,7 @@
 # -----------------------------------------------------------------
 
 import pygame
-import defaults
+from defaults import *
 
 pygame.init()
 
