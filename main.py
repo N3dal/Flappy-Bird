@@ -13,10 +13,7 @@
 # -----------------------------------------------------------------
 
 import pygame
-from time import sleep
-
-WINDOW_SIZE = [350, 600]
-BACKGROUND_COLOR = (158, 145, 232)
+import defaults
 
 pygame.init()
 
