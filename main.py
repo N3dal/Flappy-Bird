@@ -14,6 +14,7 @@
 
 import pygame
 from defaults import *
+from utils import *
 
 pygame.init()
 
@@ -84,6 +85,43 @@ class Number:
     pass
 
 
+class PointsBoard:
+    """"""
+
+    def __init__(self, *args):
+        self.__points = 0
+
+    def increment(self):
+        """
+            increment the board by one;
+        """
+
+    def reset(self):
+        self.__points = 0
+
+        return None
+
+    def show(self):
+        """
+            show the points board;
+
+            return None;
+        """
+
+        return None
+
+    def hide(self):
+        """
+            hid the points board;
+
+            return None;
+        """
+
+    @property
+    def points(self):
+        return self.__points
+
+
 def main():
 
     window = pygame.display.set_mode(WINDOW_SIZE)
@@ -107,9 +145,9 @@ def main():
             base_img_x = 0
 
         base_img_x -= 1
-        
-        window.blit(START_MSG, 
-                    ())
+
+        window.blit(START_MSG, center(
+            *WINDOW_SIZE, START_MSG.get_width(), START_MSG.get_height()))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

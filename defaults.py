@@ -43,3 +43,7 @@ YELLOW_BIRD_IMAGES = [
     image.load(r"./assets/sprites/yellowbird-midflap.png"),
     image.load(r"./assets/sprites/yellowbird-upflap.png")
 ]
+
+
+# Used to hide images;
+TRANSPARENT = (0, 0, 0, 0)
