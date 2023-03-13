@@ -22,10 +22,61 @@ class Pipe:
     """"""
     pass
 
+    def __init__(self, *args):
+        pass
+
+    def change_color(self):
+        """
+            change the pipe color;
+
+            return None;
+        """
+
+        return None
+
 
 class Bird:
     """"""
     pass
+
+    def __init__(self, *args):
+        pass
+
+    def jump(self):
+        """
+            Docstring;
+
+            return None;
+        """
+
+        return None
+
+    def change_color(self):
+        """
+            change the bird color;
+
+            return None;
+        """
+
+        return None
+
+    def show(self):
+        """
+            show the bird on the screen;
+
+            return None;
+        """
+
+        return None
+
+    def hide(self):
+        """
+            hide the bird from the screen;
+
+            return None;
+        """
+
+        return None
 
 
 class Number:
