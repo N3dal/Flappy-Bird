@@ -107,6 +107,9 @@ def main():
             base_img_x = 0
 
         base_img_x -= 1
+        
+        window.blit(START_MSG, 
+                    ())
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
