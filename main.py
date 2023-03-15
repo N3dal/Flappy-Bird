@@ -161,6 +161,8 @@ class MainWindow:
     START_MSG = pygame.image.load(r"./assets/sprites/message.png")
     ICON = pygame.image.load(r"./assets/favicon.ico")
 
+    TIMEOUT = 5  # ms;
+
     def __init__(self):
 
         # set the window icon;
@@ -177,7 +179,7 @@ class MainWindow:
         # start image status;
         self.start_image_status = True
 
-    def background_fill(self):
+    def game_fill(self):
         """
             setup Window background and the base;
             and notice that we will move the base,
@@ -240,7 +242,7 @@ class MainWindow:
         """
 
         while self.running:
-            self.background_fill()
+            self.game_fill()
 
             # key loop;
             for event in pygame.event.get():
@@ -254,7 +256,7 @@ class MainWindow:
                     self.start_image_status = True
 
             pygame.display.update()
-            pygame.time.wait(5)
+            pygame.time.wait(MainWindow.TIMEOUT)
 
     def show_start_image(self):
         """
