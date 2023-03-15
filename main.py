@@ -174,6 +174,9 @@ class MainWindow:
         # setup the default background;
         self.background_image = MainWindow.BACKGROUND_DAY_IMAGE
 
+        # start image status;
+        self.start_image_status = True
+
     def background_fill(self):
         """
             setup Window background and the base;
@@ -199,6 +202,11 @@ class MainWindow:
 
         # in every call we will mines this var by one;
         self.base_image_x_coordinates -= 1
+
+        if self.start_image_status:
+            self.show_start_image()
+        else:
+            self.hide_start_image()
 
         return None
 
@@ -239,9 +247,39 @@ class MainWindow:
                 if event.type == pygame.QUIT:
                     self.__running = False
                     break
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.start_image_status = False
+
+                if event.type == pygame.MOUSEWHEEL:
+                    self.start_image_status = True
 
             pygame.display.update()
             pygame.time.wait(5)
+
+    def show_start_image(self):
+        """
+            set the start image;
+
+            return None;
+        """
+        # first show the image;
+        MainWindow.START_MSG.set_alpha(255)
+
+        self.window.blit(MainWindow.START_MSG, center(MainWindow.WIDTH, MainWindow.HEIGHT,
+                         MainWindow.START_MSG.get_width(), MainWindow.START_MSG.get_height()))
+
+        return None
+
+    def hide_start_image(self):
+        """
+            hide the start image;
+
+            return None;
+        """
+
+        MainWindow.START_MSG.set_alpha(0)
+
+        return None
 
     @property
     def running(self):
