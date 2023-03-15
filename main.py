@@ -21,7 +21,9 @@ pygame.init()
 
 class Pipe:
     """"""
-    pass
+    GREEN_PIPE_IMAGE = pygame.image.load(r"./assets/sprites/pipe-green.png")
+
+    RED_PIPE_IMAGE = pygame.image.load(r"./assets/sprites/pipe-red.png")
 
     def __init__(self, *args):
         pass
@@ -38,7 +40,23 @@ class Pipe:
 
 class Bird:
     """"""
-    pass
+    BLUE_BIRD_IMAGES = [
+        pygame.image.load(r"./assets/sprites/bluebird-downflap.png"),
+        pygame.image.load(r"./assets/sprites/bluebird-midflap.png"),
+        pygame.image.load(r"./assets/sprites/bluebird-upflap.png")
+    ]
+
+    RED_BIRD_IMAGES = [
+        pygame.image.load(r"./assets/sprites/redbird-downflap.png"),
+        pygame.image.load(r"./assets/sprites/redbird-midflap.png"),
+        pygame.image.load(r"./assets/sprites/redbird-upflap.png")
+    ]
+
+    YELLOW_BIRD_IMAGES = [
+        pygame.image.load(r"./assets/sprites/yellowbird-downflap.png"),
+        pygame.image.load(r"./assets/sprites/yellowbird-midflap.png"),
+        pygame.image.load(r"./assets/sprites/yellowbird-upflap.png")
+    ]
 
     def __init__(self, *args):
         pass
@@ -82,7 +100,8 @@ class Bird:
 
 class Number:
     """"""
-    pass
+    NUMBER_IMAGES = [pygame.image.load(
+        f"./assets/sprites/{num}.png") for num in range(10)]
 
 
 class PointsBoard:
