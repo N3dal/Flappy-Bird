@@ -141,41 +141,117 @@ class PointsBoard:
         return self.__points
 
 
+class Menu:
+    pass
+
+
+class MainWindow:
+    """
+        Game Main Window;
+    """
+    SIZE = [288, 512]
+    WIDTH, HEIGHT = SIZE
+    BACKGROUND_COLOR = (0, 0, 0)
+    BACKGROUND_DAY_IMAGE = pygame.image.load(
+        r"./assets/sprites/background-day.png")
+    BACKGROUND_NIGHT_IMAGE = pygame.image.load(
+        r"./assets/sprites/background-night.png")
+    BASE_IMAGE = pygame.image.load(r"./assets/sprites/base.png")
+    GAME_OVER_IMAGE = pygame.image.load(r"./assets/sprites/gameover.png")
+    START_MSG = pygame.image.load(r"./assets/sprites/message.png")
+    ICON = pygame.image.load(r"./assets/favicon.ico")
+
+    def __init__(self):
+
+        # set the window icon;
+        pygame.display.set_icon(MainWindow.ICON)
+
+        self.window = pygame.display.set_mode(MainWindow.SIZE)
+
+        self.__running = True
+        self.base_image_x_coordinates = 0
+
+        # setup the default background;
+        self.background_image = MainWindow.BACKGROUND_DAY_IMAGE
+
+    def background_fill(self):
+        """
+            setup Window background and the base;
+            and notice that we will move the base,
+            image;
+
+            return None;
+        """
+
+        self.window.fill(MainWindow.BACKGROUND_COLOR)
+
+        # set the background image now and the base;
+        self.window.blit(self.background_image, (0, 0))
+
+        # set the base image;
+        self.window.blit(MainWindow.BASE_IMAGE,
+                         (self.base_image_x_coordinates, 450))
+
+        if self.base_image_x_coordinates == (MainWindow.WIDTH - MainWindow.BASE_IMAGE.get_width()):
+            self.window.blit(MainWindow.BASE_IMAGE,
+                             (self.base_image_x_coordinates + 388, 450))
+            self.base_image_x_coordinates = 0
+
+        # in every call we will mines this var by one;
+        self.base_image_x_coordinates -= 1
+
+        return None
+
+    def change_background(self, background: str = "day"):
+        """
+            change the background image;
+
+                background:str => 'day' for day background;
+                background:str => 'night' for night background;
+
+
+            return None;
+        """
+
+        if background == "day":
+            self.background_image = MainWindow.BACKGROUND_DAY_IMAGE
+        elif background == "night":
+            self.background_image = MainWindow.BACKGROUND_NIGHT_IMAGE
+
+        else:
+            raise Exception(
+                f"choose only 'day' or 'night' {background} is not valid!!")
+
+        return None
+
+    def start(self):
+        """
+            start the game main-loop;
+
+            return None;
+        """
+
+        while self.running:
+            self.background_fill()
+
+            # key loop;
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.__running = False
+                    break
+
+            pygame.display.update()
+            pygame.time.wait(5)
+
+    @property
+    def running(self):
+        return self.__running
+
+
 def main():
 
-    window = pygame.display.set_mode(WINDOW_SIZE)
-
-    # setup the game icon;
-    pygame.display.set_icon(GAME_ICON)
-
-    base_img_x = 0
-
-    # create the game main event loop;
-    game_running_state = True
-    while game_running_state:
-
-        window.fill(BACKGROUND_COLOR)
-        # set the background image;
-        window.blit(BACKGROUND_DAY_IMAGE, (0, 0))
-        window.blit(BASE_IMAGE, (base_img_x, 450))
-
-        if base_img_x == (WINDOW_SIZE[0] - BASE_IMAGE.get_width()):
-            window.blit(BASE_IMAGE, (base_img_x + 388, 450))
-            base_img_x = 0
-
-        base_img_x -= 1
-
-        window.blit(START_MSG, center(
-            *WINDOW_SIZE, START_MSG.get_width(), START_MSG.get_height()))
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_running_state = False
-                break
-
-        pygame.display.update()
-
-        pygame.time.wait(5)
+    game = MainWindow()
+    game.start()
 
     # end of the game;
     pygame.quit()
