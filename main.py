@@ -37,6 +37,24 @@ class Pipe:
 
         return None
 
+    def move(self):
+        """
+            move the pipes;
+
+            return None;
+        """
+
+        return None
+
+    def set_height(self, height: int = 50):
+        """
+            change the pipe hight;
+
+            return None;
+        """
+
+        return None
+
 
 class Bird:
     """"""
@@ -100,8 +118,78 @@ class Bird:
 
 class Number:
     """"""
-    NUMBER_IMAGES = [pygame.image.load(
+    IMAGES = [pygame.image.load(
         f"./assets/sprites/{num}.png") for num in range(10)]
+
+    def __init__(self, parent, value: int = 0):
+
+        self.value = value
+        self.parent = parent
+
+        self.__x = 0
+        self.__y = 10
+
+    def draw(self):
+        """
+            draw the number on the screen;
+
+            return None;
+        """
+        number_as_string = str(self.value)
+
+        # set the number in the center x axis;
+        self.__x = center_horizontally(
+            parent_width=WINDOW_SIZE[0], obj_width=Number.IMAGES[0].get_width() * len(number_as_string))
+
+        # to shift the number position to the right;
+        shift = 0
+
+        for num in number_as_string:
+            self.parent.blit(
+                Number.IMAGES[int(num)], (self.__x + shift, self.__y))
+            shift += 25
+
+        return None
+
+    def set_value(self, num: int):
+        """
+            change the number value;
+
+            return None;
+        """
+        self.value = num
+
+        return None
+
+    def show(self):
+        """
+            show the numbers;
+
+            return None;
+        """
+        for img in Number.IMAGES:
+            img.set_alpha(255)
+
+        return None
+
+    def hide(self):
+        """
+            hide the numbers;
+
+            return None;
+        """
+
+        for img in Number.IMAGES:
+            img.set_alpha(0)
+
+        return None
+
+    def __add__(self, val: int):
+        self.value += val
+
+        self.draw()
+
+        return None
 
 
 class PointsBoard:
@@ -163,10 +251,15 @@ class MainWindow:
 
     TIMEOUT = 5  # ms;
 
+    TITLE = "Flappy-Bird"
+
     def __init__(self):
 
         # set the window icon;
         pygame.display.set_icon(MainWindow.ICON)
+
+        # set the title of the game.
+        pygame.display.set_caption(MainWindow.TITLE)
 
         self.window = pygame.display.set_mode(MainWindow.SIZE)
 
@@ -176,10 +269,12 @@ class MainWindow:
         # setup the default background;
         self.background_image = MainWindow.BACKGROUND_DAY_IMAGE
 
+        self.num = Number(parent=self.window, value=0)
+
         # start image status;
         self.start_image_status = True
 
-    def game_fill(self):
+    def game_draw(self):
         """
             setup Window background and the base;
             and notice that we will move the base,
@@ -209,6 +304,8 @@ class MainWindow:
             self.show_start_image()
         else:
             self.hide_start_image()
+
+        self.num.draw()
 
         return None
 
@@ -242,7 +339,7 @@ class MainWindow:
         """
 
         while self.running:
-            self.game_fill()
+            self.game_draw()
 
             # key loop;
             for event in pygame.event.get():
@@ -251,6 +348,7 @@ class MainWindow:
                     break
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.start_image_status = False
+                    self.num + 1
 
                 if event.type == pygame.MOUSEWHEEL:
                     self.start_image_status = True
@@ -290,8 +388,10 @@ class MainWindow:
 
 def main():
 
-    game = MainWindow()
-    game.start()
+    # game = MainWindow()
+    # game.start()
+
+    MainWindow().start()
 
     # end of the game;
     pygame.quit()
