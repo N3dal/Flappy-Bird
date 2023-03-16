@@ -15,25 +15,58 @@
 import pygame
 from defaults import *
 from utils import *
+from random import randint
 
 pygame.init()
 
 
 class Pipe:
     """"""
-    GREEN_PIPE_IMAGE = pygame.image.load(r"./assets/sprites/pipe-green.png")
+    GREEN_IMAGE = pygame.image.load(r"./assets/sprites/pipe-green.png")
 
-    RED_PIPE_IMAGE = pygame.image.load(r"./assets/sprites/pipe-red.png")
+    RED_IMAGE = pygame.image.load(r"./assets/sprites/pipe-red.png")
 
-    def __init__(self, *args):
-        pass
+    def __init__(self, parent, flipped: bool = False):
 
-    def change_color(self):
+        self.flipped = flipped
+
+        self.parent = parent
+        self.__x, self.__y = WINDOW_SIZE[0] - \
+            Pipe.GREEN_IMAGE.get_width(), -130
+
+        self.image = Pipe.GREEN_IMAGE
+
+        if self.flipped:
+            self.flip()
+
+    def draw(self):
+        """
+            draw the pipe;
+
+            return None;
+        """
+
+        self.parent.blit(self.image, (self.__x, self.__y))
+
+        return None
+
+    def change_color(self, color: str):
         """
             change the pipe color;
 
             return None;
         """
+        if color == "green":
+            self.image = Pipe.GREEN_IMAGE
+
+        elif color == "red":
+            self.image = Pipe.RED_IMAGE
+
+        if self.flipped:
+            self.flip()
+
+        else:
+            raise Exception(f"the color {color} is not exist in Pipe Type!!!")
 
         return None
 
@@ -44,6 +77,12 @@ class Pipe:
             return None;
         """
 
+        if self.__x < -Pipe.GREEN_IMAGE.get_width():
+            # TODO: change the pipe height here;s
+            self.__x = WINDOW_SIZE[0] - (Pipe.GREEN_IMAGE.get_width() // 2)
+
+        self.__x -= 1
+
         return None
 
     def set_height(self, height: int = 50):
@@ -52,6 +91,41 @@ class Pipe:
 
             return None;
         """
+
+        self.__y = height
+
+        return None
+
+    def flip(self):
+        """
+            flip the pipe vertically;
+
+            return None;
+        """
+
+        self.image = pygame.transform.flip(self.image, False, True)
+
+        return None
+
+    def show(self):
+        """
+            show the pipe;
+
+            return None;
+        """
+
+        self.image.set_alpha(255)
+
+        return None
+
+    def hide(self):
+        """
+            hide the pipe;
+
+            return None;
+        """
+
+        self.image.set_alpha(0)
 
         return None
 
@@ -271,6 +345,9 @@ class MainWindow:
 
         self.num = Number(parent=self.window, value=0)
 
+        self.pipe = Pipe(parent=self.window, flipped=False)
+        self.reverse_pipe = Pipe(parent=self.window, flipped=True)
+
         # start image status;
         self.start_image_status = True
 
@@ -287,6 +364,15 @@ class MainWindow:
 
         # set the background image now and the base;
         self.window.blit(self.background_image, (0, 0))
+
+        # make sure to draw the pipe before the base;
+        self.pipe.draw()
+        self.pipe.move()
+        self.pipe.set_height(320)
+
+        self.reverse_pipe.draw()
+        self.reverse_pipe.move()
+        self.reverse_pipe.set_height(-130)
 
         # set the base image;
         self.window.blit(MainWindow.BASE_IMAGE,
