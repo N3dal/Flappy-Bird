@@ -26,18 +26,25 @@ class Pipe:
 
     RED_IMAGE = pygame.image.load(r"./assets/sprites/pipe-red.png")
 
-    def __init__(self, parent, flipped: bool = False):
+    MAX_HEIGHT = WINDOW_SIZE[-1] // 2 + 15
+
+    def __init__(self, parent, flipped: bool = False, x_shift: int = 0):
 
         self.flipped = flipped
 
+        self.x_shift = x_shift
+
         self.parent = parent
-        self.__x, self.__y = WINDOW_SIZE[0] - \
-            Pipe.GREEN_IMAGE.get_width(), -130
+        self.__x, self.__y = (WINDOW_SIZE[0] -
+                              Pipe.GREEN_IMAGE.get_width()) + x_shift, Pipe.MAX_HEIGHT
 
         self.image = Pipe.GREEN_IMAGE
 
+        self.__speed = 1
+
         if self.flipped:
             self.flip()
+            self.__y = -Pipe.MAX_HEIGHT
 
     def draw(self):
         """
@@ -62,11 +69,11 @@ class Pipe:
         elif color == "red":
             self.image = Pipe.RED_IMAGE
 
-        if self.flipped:
-            self.flip()
-
         else:
             raise Exception(f"the color {color} is not exist in Pipe Type!!!")
+
+        if self.flipped:
+            self.flip()
 
         return None
 
@@ -76,12 +83,21 @@ class Pipe:
 
             return None;
         """
+        print(self.__x)
 
-        if self.__x < -Pipe.GREEN_IMAGE.get_width():
-            # TODO: change the pipe height here;s
-            self.__x = WINDOW_SIZE[0] - (Pipe.GREEN_IMAGE.get_width() // 2)
+        # if self.__x < -1 * (Pipe.GREEN_IMAGE.get_width() + self.x_shift):
+        #     self.__x = (WINDOW_SIZE[0] -
+        #                 (Pipe.GREEN_IMAGE.get_width() // 2)) + self.x_shift
 
-        self.__x -= 1
+        if self.__x < -1 * (4 * Pipe.GREEN_IMAGE.get_width() + 300):
+            self.__x = WINDOW_SIZE[0]
+
+            if self.flipped:
+                self.set_height(randint(-400, -256))
+            else:
+                self.set_height(randint(256, 400))
+
+        self.__x -= self.__speed
 
         return None
 
@@ -104,6 +120,31 @@ class Pipe:
         """
 
         self.image = pygame.transform.flip(self.image, False, True)
+
+        return None
+
+    def speed_up(self, speed: float = 0.20):
+        """
+            increase the pipe movement speed;
+
+            return None;
+        """
+
+        self.__speed += speed
+
+        return None
+
+    def speed_down(self, speed: float = 0.20):
+        """
+            decrease the pipe movement speed;
+
+            return None;
+        """
+
+        self.__speed -= speed
+
+        if self.__speed < 0:
+            self.__speed = 1
 
         return None
 
@@ -298,7 +339,7 @@ class PointsBoard:
             return None;
         """
 
-    @property
+    @ property
     def points(self):
         return self.__points
 
@@ -345,8 +386,10 @@ class MainWindow:
 
         self.num = Number(parent=self.window, value=0)
 
-        self.pipe = Pipe(parent=self.window, flipped=False)
-        self.reverse_pipe = Pipe(parent=self.window, flipped=True)
+        self.pipes = [Pipe(parent=self.window, flipped=False, x_shift=x)
+                      for x in range(0, 800, 200)]
+        self.reverse_pipes = [
+            Pipe(parent=self.window, flipped=True, x_shift=x) for x in range(0, 800, 200)]
 
         # start image status;
         self.start_image_status = True
@@ -365,14 +408,25 @@ class MainWindow:
         # set the background image now and the base;
         self.window.blit(self.background_image, (0, 0))
 
-        # make sure to draw the pipe before the base;
-        self.pipe.draw()
-        self.pipe.move()
-        self.pipe.set_height(320)
+        # # make sure to draw the pipe before the base;
+        # self.pipe.draw()
+        # self.pipe.move()
+        # # self.pipe.set_height(320)
 
-        self.reverse_pipe.draw()
-        self.reverse_pipe.move()
-        self.reverse_pipe.set_height(-130)
+        # self.reverse_pipe.draw()
+        # self.reverse_pipe.move()
+        # self.reverse_pipe.set_height(-130)
+
+        for pipe, reverse_pipe in zip(self.pipes, self.reverse_pipes):
+            pipe.draw()
+            reverse_pipe.draw()
+
+            pipe.move()
+            reverse_pipe.move()
+
+        # for pipe in self.pipes:
+        #     pipe.move()
+        #     pipe.draw()
 
         # set the base image;
         self.window.blit(MainWindow.BASE_IMAGE,
@@ -439,6 +493,13 @@ class MainWindow:
                 if event.type == pygame.MOUSEWHEEL:
                     self.start_image_status = True
 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+
+                        for pipe in self.pipes:
+                            pipe.speed_up()
+                            pipe.change_color("red")
+
             pygame.display.update()
             pygame.time.wait(MainWindow.TIMEOUT)
 
@@ -467,7 +528,7 @@ class MainWindow:
 
         return None
 
-    @property
+    @ property
     def running(self):
         return self.__running
 
